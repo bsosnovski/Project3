@@ -12,7 +12,7 @@ require(tidyr)
 pr_df <- read.csv(file="https://raw.githubusercontent.com/che10vek/Data-607-Assignments/master/Primary_Results2016%20(1).csv", header=TRUE, sep=",")
 head(pr_df)
 ```
-Spreading the dataset to move candidate votes and fraction data from rows to columns
+Spreading the dataset to move candidate votes and fraction data from rows to columns. The code was adapted from the following help page: https://community.rstudio.com/t/spread-with-multiple-value-columns/5378
 
 ```{r}
 pr_df_wide <- pr_df %>%
