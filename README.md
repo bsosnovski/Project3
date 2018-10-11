@@ -1,10 +1,4 @@
 # Project3
 Data 607 Project 3
 
-Authors:
-
-Elina Azrilyan
-
-Robert Mercier
-
-Bianca Sosnovski
+Authors: E. Azrilyan, A. Dvir-Djerassi, C. Joseph, R. Mercier and B. Sosnovski
