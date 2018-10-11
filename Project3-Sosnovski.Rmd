@@ -1,0 +1,69 @@
+---
+title: "Project 3"
+author: "E. Azrilyan, A. Dvir-Djerassi, C. Joseph, R. Mercier and B. Sosnovski"
+date: "10/10/2018"
+output: 
+  html_document: 
+    theme: cerulean
+---
+
+```{r setup, include=FALSE, warning = FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load packages
+```{r}
+library(knitr)
+library(kableExtra)# manipulate table styles
+suppressMessages(library(tidyverse))
+```
+
+# Dataset
+
+The dataset contains demographic data on US counties related to the 2016 US Primary Presidential Election.
+
+The dataset contains several main files. The data may be downloaded from the url
+https://www.kaggle.com/benhamner/2016-us-election
+
+## Read the data
+
+```{r}
+facts <- read.csv(file="https://raw.githubusercontent.com/bsosnovski/Project3/master/County_Facts.csv", header=TRUE, sep=",")
+glimpse(facts, width = getOption("width"))
+
+headers <- read.csv(file="https://raw.githubusercontent.com/bsosnovski/Project3/master/Headers.csv", header=TRUE, sep=",", stringsAsFactors = F)
+glimpse(headers, width = getOption("width"))
+```
+
+## Tidying the data
+
+The dataset contains rows with total figures for each state and for the country. Because we can use the summary function to obtains these figures, and also to facilitate the data reading, we filter these rows out. To do so, we note that such rows have the variable state_abbreviation with blanks.
+
+```{r}
+facts <- facts %>% filter(state_abbreviation!="")
+kable(head(facts))%>% kable_styling(bootstrap_options = c("striped", "condensed"))
+```
+
+The file Headers.csv contains the description to what some of the variables are. We replace the codes in the headers of the data accordingly.
+
+```{r}
+# Function that matches the code in the dataframe column
+# and replace it with dictionary value
+new.headers <- function(headers,facts){
+        n <- nrow(headers)
+        for (i in seq(n)){
+                col.Ind <- which(colnames(facts)==headers[i,1])
+                colnames(facts)[col.Ind] <- headers[i,2]
+        }
+        return(facts)
+}
+
+facts2 <- new.headers(headers,facts)
+kable(head(facts2))%>% kable_styling(bootstrap_options = c("striped", "condensed"))
+
+```
+
+
+
+
+
