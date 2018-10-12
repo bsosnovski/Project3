@@ -1,16 +1,18 @@
 ---
 title: "Project 3"
-author: "E. Azrilyan, R. Mercier and B. Sosnovski"
+Authors: E. Azrilyan, A. Dvir-Djerassi, C. Joseph, R. Mercier and B. Sosnovski
 date: "10/09/2018"
 output: 
   html_document: 
     theme: cerulean
 ---
 ```{r message=FALSE}
-require(dplyr)
-require(tidyr)
+library(knitr)
+library(kableExtra)# manipulate table styles
+suppressMessages(library(tidyverse))
 pr_df <- read.csv(file="https://raw.githubusercontent.com/che10vek/Data-607-Assignments/master/Primary_Results2016%20(1).csv", header=TRUE, sep=",")
 head(pr_df)
+dim(pr_df)
 ```
 Spreading the dataset to move candidate votes and fraction data from rows to columns. The code was adapted from the following help page: https://community.rstudio.com/t/spread-with-multiple-value-columns/5378
 
@@ -21,12 +23,14 @@ pr_df_wide <- pr_df %>%
     unite(temp, candidate, variable) %>%
     spread(temp, value)
 head(pr_df_wide)
+dim(pr_df_wide)
 ```
 
-Now let's create a new dataframe with only the data for 3 candidates we are intersted in: Bernie Sanders, Hillary Clinton, and Donald Trump.
+Now let's create a new dataframe with only the data for 3 candidates we are intersted in: Bernie Sanders, Hillary Clinton, and Donald Trump. 
 
 ```{r}
 new_pr_df <- data.frame(pr_df_wide$state, pr_df_wide$state_abbreviation, pr_df_wide$county, pr_df_wide$fips, pr_df_wide$`Bernie Sanders_fraction_votes`, pr_df_wide$`Bernie Sanders_votes`, pr_df_wide$`Hillary Clinton_fraction_votes`, pr_df_wide$`Hillary Clinton_votes`, pr_df_wide$`Donald Trump_fraction_votes`, pr_df_wide$`Donald Trump_votes`)
 names(new_pr_df) <- c("state", "state_abbr", "county", "fips", "sanders fraction votes", "sanders votes", "clinton fraction votes", "clinton votes","trump fraction votes", "trump votes")
 head(new_pr_df)
+dim(new_pr_df)
 ```
