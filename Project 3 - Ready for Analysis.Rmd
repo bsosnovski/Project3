@@ -190,7 +190,7 @@ write.csv(trump_data, "trump_data.csv")
 
 ## Analysis on votes gained by Trump and Hilary 
 
-Let's do a Backward elimination process to find the relationship of demographic metrics on Votes gained by Trump and Hilary.  Backward elimination is the process of reducing the metrics which are less statisically significant to a particular target metric. The idea here is that the metrics having less p-value(significance) has high co-relation to the target metrics. Once this is done, we will look at those metrics which are having less P-value(high significance)
+Let's do a Backward elimination process to find the relationship of demographic metrics on Votes gained by Trump and Hilary.  Backward elimination is the process of removing the metrics which are less statisically significant to a particular target metric. The idea here is that the metrics having less p-value(significance) has high co-relation to the target metrics. Once this is done, we will look at those metrics which are having less P-value(high significance)
 
 First, we will do it for Trump, 
 
@@ -268,6 +268,10 @@ We see from the above results, the votes gain for Hilary has some high co-relati
 ## Relationship between Households with Trump, Hilary votes gained. 
 
 Based on above results, we see the metrics "Households, 2009-2013" has a high significance level on votes gained regardless of candidates. Infact there are couple of other metrics too[Per capita money income, Retail sales per capita, 2007] which are common to both candidates, but highly significant to the target metric. Let's create a scatterplot for trump favored states[Indiana, Florida, Pennsylvania counties] that shows mean household and total votes gained for Trump/Hilary for each states. We see a linear relationship between Households and votes gained[Trump]. But slope of line is different in both cases. Hilary has higher slope than Trump which means that counties having low household is favoring Trump and counties having high household favoring Hilary.
+
+Please read this article which commends on "Richer people vote more"
+
+https://www.weforum.org/agenda/2018/07/low-voter-turnout-increasing-household-income-may-help/
 
 ![Caption for the picture.](trump_won.png)
 
