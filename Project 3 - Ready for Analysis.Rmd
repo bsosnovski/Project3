@@ -179,5 +179,98 @@ For the analysis we would like to conduct, these 11 states that are not organize
 ```{r}
 complete_data <- inner_join(new_pr_df, facts2, by = c("fips"))
 dim(complete_data) # 2798 counties
-unique(complete_data$state) #40 states  
+unique(complete_data$state) #40 states 
+write.csv(complete_data, "complete_data.csv")
+
+trump_data <- complete_data %>% filter(`trump votes`> 0)  
+write.csv(trump_data, "trump_data.csv")
+
 ```
+
+
+## Analysis on votes gained by Trump and Hilary 
+
+Let's do a Backward elimination process to find the relationship of demographic metrics on Votes gained by Trump and Hilary.  Backward elimination is the process of reducing the metrics which are less statisically significant to a particular target metric. The idea here is that the metrics having less p-value(significance) has high co-relation to the target metrics. Once this is done, we will look at those metrics which are having less P-value(high significance)
+
+First, we will do it for Trump, 
+
+Target metric : Votes gained by Trump 
+metrics Used : Since there are lot of demographic metrics in the data set, we will use some possible metrics by doing conscious judgment. 
+
++ Persons under 5 years, percent, 2014
++ Persons under 18 years, percent, 2014
++ Persons 65 years and over, percent, 2014
++ Female persons, percent, 2014
++ White alone, percent, 2014
++ Black or African American alone, percent, 2014
++ American Indian and Alaska Native alone, percent, 2014
++ Asian alone, percent, 2014
++ Native Hawaiian and Other Pacific Islander alone, percent, 2014
++ Two or More Races, percent, 2014
++ Hispanic or Latino, percent, 2014
++ White alone, not Hispanic or Latino, percent, 2014
++ Households, 2009-2013
++ Per capita money income in past 12 months (2013 dollars), 2009-2013
++ Retail sales per capita, 2007
+
+
+
+
+```{r}
+
+trump_data <- complete_data %>% filter(`trump votes`> 0 )  %>% select("sanders fraction votes","sanders votes","clinton fraction votes","clinton votes","trump fraction votes","trump votes","cruz fraction votes","cruz votes", "Persons under 5 years, percent, 2014","Persons under 18 years, percent, 2014","Persons 65 years and over, percent, 2014","Female persons, percent, 2014","White alone, percent, 2014","Black or African American alone, percent, 2014","American Indian and Alaska Native alone, percent, 2014","Asian alone, percent, 2014","Native Hawaiian and Other Pacific Islander alone, percent, 2014","Two or More Races, percent, 2014","Hispanic or Latino, percent, 2014","White alone, not Hispanic or Latino, percent, 2014","Households, 2009-2013" , "Per capita money income in past 12 months (2013 dollars), 2009-2013" , "Retail sales per capita, 2007")
+
+
+print("Trump analysis..")
+full_model <- lm(`trump votes` ~ `Persons under 18 years, percent, 2014`+`Persons 65 years and over, percent, 2014`+`Female persons, percent, 2014`+`White alone, percent, 2014`+`Black or African American alone, percent, 2014`+`American Indian and Alaska Native alone, percent, 2014`+`Asian alone, percent, 2014`+`Native Hawaiian and Other Pacific Islander alone, percent, 2014`+`Two or More Races, percent, 2014`+ `Hispanic or Latino, percent, 2014` + `White alone, not Hispanic or Latino, percent, 2014` + `Households, 2009-2013` + `Per capita money income in past 12 months (2013 dollars), 2009-2013` + `Retail sales per capita, 2007`  , data= trump_data)
+summary(full_model)
+step(full_model ,data= trump_data , direction = "backward" ,test = "F")
+```
+
+## Inference from backward elimination process[Trump]
+We see from the above results, the votes gain for Trump has some high co-relation to below metrics. 
+
+- `White alone, percent, 2014`                                            12.5119 0.0004112 ***
+- `White alone, not Hispanic or Latino, percent, 2014`                    13.6002 0.0002306 ***
+- `Hispanic or Latino, percent, 2014`                                     14.6517 0.0001323 ***
+- `Retail sales per capita, 2007`                                         34.8016 4.106e-09 ***
+- `Per capita money income in past 12 months (2013 dollars), 2009-2013`   71.7245 < 2.2e-16 ***
+- `Households, 2009-2013`                                               5340.9454 < 2.2e-16 ***
+
+
+```{r}
+
+
+clinton_data <- complete_data %>% filter(`clinton votes`> 0 )  %>% select("sanders fraction votes","sanders votes","clinton fraction votes","clinton votes","trump fraction votes","trump votes","cruz fraction votes","cruz votes", "Persons under 5 years, percent, 2014","Persons under 18 years, percent, 2014","Persons 65 years and over, percent, 2014","Female persons, percent, 2014","White alone, percent, 2014","Black or African American alone, percent, 2014","American Indian and Alaska Native alone, percent, 2014","Asian alone, percent, 2014","Native Hawaiian and Other Pacific Islander alone, percent, 2014","Two or More Races, percent, 2014","Hispanic or Latino, percent, 2014","White alone, not Hispanic or Latino, percent, 2014","Households, 2009-2013" , "Per capita money income in past 12 months (2013 dollars), 2009-2013" , "Retail sales per capita, 2007")
+
+
+print("Clinton analysis..")
+full_model <- lm(`clinton votes` ~ `Persons under 18 years, percent, 2014`+`Persons 65 years and over, percent, 2014`+`Female persons, percent, 2014`+`White alone, percent, 2014`+`Black or African American alone, percent, 2014`+`American Indian and Alaska Native alone, percent, 2014`+`Asian alone, percent, 2014`+`Native Hawaiian and Other Pacific Islander alone, percent, 2014`+`Two or More Races, percent, 2014`+ `Hispanic or Latino, percent, 2014` + `White alone, not Hispanic or Latino, percent, 2014` + `Households, 2009-2013` + `Per capita money income in past 12 months (2013 dollars), 2009-2013` + `Retail sales per capita, 2007`  , data= trump_data)
+summary(full_model)
+step(full_model ,data= clinton_data , direction = "backward" ,test = "F")
+
+```
+
+## Inference from backward elimination process[Hilary]
+We see from the above results, the votes gain for Hilary has some high co-relation to below metrics. 
+
+- `Retail sales per capita, 2007`                                          12.5289 0.0004075 ***
+- `White alone, not Hispanic or Latino, percent, 2014`                     13.7282 0.0002155 ***
+- `Hispanic or Latino, percent, 2014`                                      14.4968 0.0001435 ***
+- `Per capita money income in past 12 months (2013 dollars), 2009-2013`    16.7814 4.318e-05 ***
+- `Asian alone, percent, 2014`                                             20.4789 6.290e-06 ***
+- `Black or African American alone, percent, 2014`                         22.1556 2.641e-06 ***
+- `American Indian and Alaska Native alone, percent, 2014`                 22.2582 2.505e-06 ***
+- `Persons under 18 years, percent, 2014`                                  23.3452 1.430e-06 ***
+- `Households, 2009-2013`                                               12092.7989 < 2.2e-16 ***
+
+
+## Relationship between Households with Trump, Hilary votes gained. 
+
+Based on above results, we see the metrics "Households, 2009-2013" has a high significance level on votes gained regardless of candidates. Infact there are couple of other metrics too[Per capita money income, Retail sales per capita, 2007] which are common to both candidates, but highly significant to the target metric. Let's create a scatterplot for trump favored states[Indiana, Florida, Pennsylvania counties] that shows mean household and total votes gained for Trump/Hilary for each states. We see a linear relationship between Households and votes gained[Trump]. But slope of line is different in both cases. Hilary has higher slope than Trump which means that counties having low household is favoring Trump and counties having high household favoring Hilary.
+
+![Caption for the picture.](trump_won.png)
+
+Now let's create a scatterplot for hilary favored states[California, Newyork, New jersy counties] that shows mean household and total votes gained for Trump/Hilary for each states. Here as well, we get a linear relation, but slope is more or less same which means there is not much favorism towards Trump in these states. 
+
+![Caption for the picture.](clinton_won.png)
