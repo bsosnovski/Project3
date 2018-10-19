@@ -329,13 +329,13 @@ Let's create a scatterplot for trump favored states [Indiana, Florida, Pennsylva
 Please read this article which commends on "Richer people vote more":
 https://www.weforum.org/agenda/2018/07/low-voter-turnout-increasing-household-income-may-help/
 
-![States where Trump won.](trump_won.png)
+![States where Trump won.](https://i.imgur.com/jZdqWUs.png)
 
 Now let's create a scatterplot for Clinton favored states [California, Newyork, New jersy counties] that shows mean household and total votes gained for Trump/Clinton for each states. Here as well, we get a linear relation, but slope is more or less same which means there is not much favorism towards Trump in these states. 
 
 <br>
 
-![States where Clinton won.](clinton_won.png)
+![States where Clinton won.](https://i.imgur.com/Ew6AFEW.png)
 
 ### More analysis
 
