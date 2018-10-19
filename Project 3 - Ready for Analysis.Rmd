@@ -14,11 +14,13 @@ library(kableExtra)# manipulate table styles
 suppressMessages(library(tidyverse))
 pr_df <- read.csv(file="https://raw.githubusercontent.com/che10vek/Data-607-Assignments/master/Primary_Results2016%20(1).csv", header=TRUE, sep=",")
 head(pr_df)
+tail(pr_df)
 dim(pr_df)
 ```
 
-## Spreading the dataset to move candidate votes and fraction data from rows to columns. The code was adapted from the following help page: https://community.rstudio.com/t/spread-with-multiple-value-columns/5378
+## Spreading the dataset to move candidate votes and fraction data from rows to columns. 
 ```{r}
+#The code was adapted from the following help page: https://community.rstudio.com/t/spread-with-multiple-value-columns/5378
 pr_df$party <- NULL
 pr_df_wide <- pr_df %>%
     gather(variable, value, -(state:candidate)) %>%
@@ -28,7 +30,8 @@ head(pr_df_wide)
 dim(pr_df_wide)
 ```
 
-## Now let's create a new dataframe with only the data for 3 candidates we are intersted in: Bernie Sanders, Hillary Clinton, Ted Cruz, and Donald Trump. 
+## Now let's create a new dataframe with only the data for the 4 candidates we are intersted in: Bernie Sanders, Hillary Clinton, Ted Cruz, and Donald Trump. 
+
 ```{r}
 new_pr_df <- data.frame(pr_df_wide$state, pr_df_wide$state_abbreviation, pr_df_wide$county, pr_df_wide$fips, pr_df_wide$`Bernie Sanders_fraction_votes`, pr_df_wide$`Bernie Sanders_votes`, pr_df_wide$`Hillary Clinton_fraction_votes`, pr_df_wide$`Hillary Clinton_votes`, pr_df_wide$`Donald Trump_fraction_votes`, pr_df_wide$`Donald Trump_votes`, pr_df_wide$`Ted Cruz_fraction_votes`, pr_df_wide$`Ted Cruz_votes`)
 names(new_pr_df) <- c("state", "state_abbr", "county", "fips", "sanders fraction votes", "sanders votes", "clinton fraction votes", "clinton votes","trump fraction votes", "trump votes", "cruz fraction votes", "cruz votes")
@@ -278,3 +281,73 @@ https://www.weforum.org/agenda/2018/07/low-voter-turnout-increasing-household-in
 Now let's create a scatterplot for hilary favored states[California, Newyork, New jersy counties] that shows mean household and total votes gained for Trump/Hilary for each states. Here as well, we get a linear relation, but slope is more or less same which means there is not much favorism towards Trump in these states. 
 
 ![Caption for the picture.](clinton_won.png)
+
+## Elina's Analysis Below:
+
+##### First let's take a look at how close the election was - let's look at the average percentage and number of votes for all 4 candidates. 
+
+```{r}
+perc_votes<-complete_data %>%
+  select ("sanders fraction votes", "clinton fraction votes", "trump fraction votes", "cruz fraction votes")
+count_votes<-complete_data %>%
+  select ("sanders votes", "clinton votes", "trump votes", "cruz votes")
+
+# Average
+sort(apply(perc_votes, 2, mean, na.rm=TRUE), decreasing = TRUE)
+# Sum of votes
+sort(apply(count_votes, 2, sum, na.rm=TRUE), decreasing = TRUE)
+```
+
+##### We can see that Clinton was in the lead by both average percentage and total count of votes in the states we have the data for. 
+
+##### Let's take a look at how gender correlates with the results by examining the relationship of female population with results for each candidate.
+
+```{r}
+#Democrats
+plot(complete_data$"Female persons, percent, 2014", complete_data$`clinton fraction votes`, main = "Clinton Data", xlab = "% of female population", ylab = "Percentage of votes for Candidate")
+plot(complete_data$"Female persons, percent, 2014", complete_data$`sanders fraction votes`, main = "Sanders Data", xlab = "% of female population", ylab = "Percentage of votes for Candidate")
+#Republicans
+plot(complete_data$"Female persons, percent, 2014", complete_data$`trump fraction votes`, main = "Trump Data", xlab = "% of female population", ylab = "Percentage of votes for Candidate")
+plot(complete_data$"Female persons, percent, 2014", complete_data$`cruz fraction votes`, main = "Cruz Data", xlab = "% of female population", ylab = "Percentage of votes for Candidate")
+```
+
+##### It looks like the "Clinton" data shows a correlation - the counties with higher female population - seem to be showing higher Clinton votes in the primary election. There is also the opposite effect for Bernie Sanders. 
+
+#####Let's take a look at how race correlates with the results by examining the relationship of female population with results for each candidate.
+
+```{r}
+#Democrats
+plot(complete_data$"White alone, percent, 2014", complete_data$`clinton fraction votes`, main = "Clinton Data", xlab = "% of white population", ylab = "Percentage of votes for Candidate")
+plot(complete_data$"White alone, percent, 2014", complete_data$`sanders fraction votes`, main = "Sanders Data", xlab = "% of white population", ylab = "Percentage of votes for Candidate")
+#Republicans
+plot(complete_data$"White alone, percent, 2014", complete_data$`trump fraction votes`, main = "Trump Data", xlab = "% of white population", ylab = "Percentage of votes for Candidate")
+plot(complete_data$"White alone, percent, 2014", complete_data$`cruz fraction votes`, main = "Cruz Data", xlab = "% of white population", ylab = "Percentage of votes for Candidate")
+```
+
+##### From visual inspection it looks like "Sanders"  and "Trump" were slightly more popular in the counties with higher white only population.
+
+##### Let's see if percentage of foreign born population impacts results.
+
+```{r}
+#Democrats
+boxplot(complete_data[complete_data$'Foreign born persons, percent, 2009-2013' >=15,]$'clinton fraction votes', complete_data$'clinton fraction votes', names = c("in counties with over 15% foreign born", "overall votes"), ylab = "Clinton")
+boxplot(complete_data[complete_data$'Foreign born persons, percent, 2009-2013' >=15,]$'sanders fraction votes', complete_data$'sanders fraction votes', names = c("in counties with over 15% foreign born", "overall votes"), ylab = "Sanders")
+#Republicans
+boxplot(complete_data[complete_data$'Foreign born persons, percent, 2009-2013' >=15,]$'trump fraction votes', complete_data$'trump fraction votes', names = c("in counties with over 15% foreign born", "overall votes"), ylab = "Trump")
+boxplot(complete_data[complete_data$'Foreign born persons, percent, 2009-2013' >=15,]$'cruz fraction votes', complete_data$'cruz fraction votes', names = c("in counties with over 15% foreign born", "overall votes"), ylab = "Cruz")
+```
+
+##### It looks like Clinton and Trump were more popular in counties with a higher percentage of foreign born population but the differnce doesn't seem very drastic.  
+
+##### Let's see if median household income impacts results. Let compare overall results with results of households with median income over 80K. 
+
+```{r}
+#Democrats
+boxplot(complete_data[complete_data$'Median household income, 2009-2013' >=80000,]$'clinton fraction votes', complete_data$'clinton fraction votes', names = c("median income over 80K", "overall votes"), ylab = "Clinton")
+boxplot(complete_data[complete_data$'Median household income, 2009-2013' >=80000,]$'sanders fraction votes', complete_data$'clinton fraction votes', names = c("median income over 80K", "overall votes"), ylab = "Sanders")
+#Republicans
+boxplot(complete_data[complete_data$'Median household income, 2009-2013' >=80000,]$'trump fraction votes', complete_data$'clinton fraction votes', names = c("median income over 80K", "overall votes"), ylab = "Trump")
+boxplot(complete_data[complete_data$'Median household income, 2009-2013' >=80000,]$'cruz fraction votes', complete_data$'clinton fraction votes', names = c("median income over 80K", "overall votes"), ylab = "Cruz")
+```
+
+##### Clinton and Trump are very significantly favored by household with median income over 80K. 
