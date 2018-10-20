@@ -331,7 +331,7 @@ https://www.weforum.org/agenda/2018/07/low-voter-turnout-increasing-household-in
 
 ![States where Trump won.](https://i.imgur.com/jZdqWUs.png)
 
-Now let's create a scatterplot for Clinton favored states [California, Newyork, New jersy counties] that shows mean household and total votes gained for Trump/Clinton for each states. Here as well, we get a linear relation, but slope is more or less same which means there is not much favorism towards Trump in these states. 
+Now let's create a scatterplot for Clinton favored states [California, New York, New Jersey counties] that shows mean household and total votes gained for Trump/Clinton for each states. Here as well, we get a linear relation, but slope is more or less same which means there is not much favorism towards Trump in these states. 
 
 <br>
 
@@ -357,7 +357,7 @@ sort(apply(count_votes, 2, sum, na.rm=TRUE), decreasing = TRUE)
 
 We can see that Clinton was in the lead by both average percentage and total count of votes in the states we have the data for. 
 
-#### Votes of  female population
+#### Votes of female population
 
 Let's take a look at how gender correlates with the results by examining the relationship of female population with results for each candidate.
 
@@ -387,7 +387,7 @@ plot(complete_data$"White alone, percent, 2014", complete_data$`cruz fraction vo
 
 From visual inspection it looks like "Sanders"  and "Trump" were slightly more popular in the counties with higher white only population.
 
-#### Votes of forein born population
+#### Votes of foreign born population
 
 Let's see if percentage of foreign born population impacts results.
 
